@@ -49,6 +49,12 @@
 	<settings pass="oobeSystem">
 		<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
 			<UserAccounts>
+			    <LocalAccounts>
+                    <LocalAccount wcm:action="add">
+                        <Name>Administrator</Name>
+                        <Group>Administrators</Group>
+                    </LocalAccount>
+                </LocalAccounts>
 				<AdministratorPassword>
 					<Value></Value>
 					<PlainText>true</PlainText>
@@ -67,7 +73,7 @@
 				<ProtectYourPC>3</ProtectYourPC>
 				<HideEULAPage>true</HideEULAPage>
 				<HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
-				<HideOnlineAccountScreens>false</HideOnlineAccountScreens>
+				<HideOnlineAccountScreens>true</HideOnlineAccountScreens>
 			</OOBE>
 			<FirstLogonCommands>
 				<SynchronousCommand wcm:action="add">
@@ -103,6 +109,7 @@ $scripts = @(
 	{
 		Set-ExecutionPolicy -Scope 'LocalMachine' -ExecutionPolicy 'RemoteSigned' -Force;
 	};
+	{ net user Administrator /active:yes; };  # <-- 加这行
 	{
 		reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Dsh" /v AllowNewsAndInterests /t REG_DWORD /d 0 /f;
 	};
@@ -112,6 +119,10 @@ $scripts = @(
 	{
 		reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\BitLocker" /v "PreventDeviceEncryption" /t REG_DWORD /d 1 /f;
 	};
+	{
+        reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v NoAutoRebootWithLoggedOnUsers /t REG_DWORD /d 1 /f;
+        reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v AUPowerManagement /t REG_DWORD /d 0 /f;
+    };
 );
 
 &amp; {
@@ -146,6 +157,22 @@ $scripts = @(
 			$_.SessionId -eq ( Get-Process -Id $PID ).SessionId;
 		} | Stop-Process -Force;
 	};
+	{
+        # 关闭休眠
+        powercfg /hibernate off;
+       # 禁用快速启动
+        reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v HiberbootEnabled /t REG_DWORD /d 0 /f;
+       # 全部永不睡眠
+        powercfg -x -standby-timeout-ac 0;
+        powercfg -x -standby-timeout-dc 0;
+        powercfg -x -disk-timeout-ac 0;
+        powercfg -x -disk-timeout-dc 0;
+        powercfg -x -monitor-timeout-ac 0;
+        powercfg -x -monitor-timeout-dc 0;
+        # 禁用唤醒
+        powercfg /SETACVALUEINDEX SCHEME_CURRENT SUB_NONE CONNECTIVITYINSTANDBY 0;
+        powercfg /SETDCVALUEINDEX SCHEME_CURRENT SUB_NONE CONNECTIVITYINSTANDBY 0;
+    };
 );
 
 &amp; {

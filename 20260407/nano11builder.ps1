@@ -89,7 +89,7 @@ $lines = $imageInfo -split '\r?\n'
 foreach ($line in $lines) { if ($line -like '*Architecture : *') { $architecture = $line -replace 'Architecture : ',''; if ($architecture -eq 'x64') { $architecture = 'amd64' }; Write-Host "Architecture: $architecture"; break } }
 if (-not $architecture) { Write-Host "Architecture information not found." }
 Write-Host "Removing provisioned AppX packages (bloatware)..."
-$packagesToRemove = Get-AppxProvisionedPackage -Path $scratchDir | Where-Object { $_.PackageName -like '*Zune*' -or $_.PackageName -like '*Bing*' -or $_.PackageName -like '*Clipchamp*' -or $_.PackageName -like '*Gaming*' -or $_.PackageName -like '*People*' -or $_.PackageName -like '*PowerAutomate*' -or $_.PackageName -like '*Teams*' -or $_.PackageName -like '*Todos*' -or $_.PackageName -like '*YourPhone*' -or $_.PackageName -like '*SoundRecorder*' -or $_.PackageName -like '*Solitaire*' -or $_.PackageName -like '*FeedbackHub*' -or $_.PackageName -like '*Maps*' -or $_.PackageName -like '*OfficeHub*' -or $_.PackageName -like '*Help*' -or $_.PackageName -like '*Family*' -or $_.PackageName -like '*Alarms*' -or $_.PackageName -like '*CommunicationsApps*' -or $_.PackageName -like '*Copilot*' -or $_.PackageName -like '*CompatibilityEnhancements*' -or $_.PackageName -like '*AV1VideoExtension*' -or $_.PackageName -like '*AVCEncoderVideoExtension*' -or $_.PackageName -like '*HEIFImageExtension*' -or $_.PackageName -like '*HEVCVideoExtension*' -or $_.PackageName -like '*MicrosoftStickyNotes*' -or $_.PackageName -like '*OutlookForWindows*' -or $_.PackageName -like '*RawImageExtension*' -or $_.PackageName -like '*SecHealthUI*' -or $_.PackageName -like '*VP9VideoExtensions*' -or $_.PackageName -like '*WebpImageExtension*' -or $_.PackageName -like '*DevHome*' -or $_.PackageName -like '*Photos*' -or $_.PackageName -like '*Camera*' -or $_.PackageName -like '*QuickAssist*' -or $_.PackageName -like '*CoreAI*'  -or $_.PackageName -like '*PeopleExperienceHost*' -or $_.PackageName -like '*PinningConfirmationDialog*' -or $_.PackageName -like '*SecureAssessmentBrowser*' -or $_.PackageName -like '*Paint*' -or $_.PackageName -like '*Notepad*'  }
+$packagesToRemove = Get-AppxProvisionedPackage -Path $scratchDir | Where-Object { $_.PackageName -like '*Zune*' -or $_.PackageName -like '*Bing*' -or $_.PackageName -like '*Clipchamp*' -or $_.PackageName -like '*Gaming*' -or $_.PackageName -like '*People*' -or $_.PackageName -like '*PowerAutomate*' -or $_.PackageName -like '*Teams*' -or $_.PackageName -like '*Todos*' -or $_.PackageName -like '*YourPhone*' -or $_.PackageName -like '*SoundRecorder*' -or $_.PackageName -like '*Solitaire*' -or $_.PackageName -like '*FeedbackHub*' -or $_.PackageName -like '*Maps*' -or $_.PackageName -like '*OfficeHub*' -or $_.PackageName -like '*Help*' -or $_.PackageName -like '*Family*' -or $_.PackageName -like '*Alarms*' -or $_.PackageName -like '*CommunicationsApps*' -or $_.PackageName -like '*Copilot*' -or $_.PackageName -like '*CompatibilityEnhancements*' -or $_.PackageName -like '*AV1VideoExtension*' -or $_.PackageName -like '*AVCEncoderVideoExtension*' -or $_.PackageName -like '*HEIFImageExtension*' -or $_.PackageName -like '*HEVCVideoExtension*' -or $_.PackageName -like '*MicrosoftStickyNotes*' -or $_.PackageName -like '*OutlookForWindows*' -or $_.PackageName -like '*RawImageExtension*' -or $_.PackageName -like '*SecHealthUI*' -or $_.PackageName -like '*VP9VideoExtensions*' -or $_.PackageName -like '*WebpImageExtension*' -or $_.PackageName -like '*DevHome*' -or $_.PackageName -like '*Photos*' -or $_.PackageName -like '*Camera*' -or $_.PackageName -like '*QuickAssist*' -or $_.PackageName -like '*CoreAI*'  -or $_.PackageName -like '*PeopleExperienceHost*' -or $_.PackageName -like '*PinningConfirmationDialog*' -or $_.PackageName -like '*SecureAssessmentBrowser*' -or $_.PackageName -like '*Paint*'  }
 foreach ($package in $packagesToRemove) { write-host "Removing: $($package.DisplayName)"; Remove-AppxProvisionedPackage -Path $scratchDir -PackageName $package.PackageName }
 
 Write-Host "Attempting to remove leftover WindowsApps folders..."
@@ -105,9 +105,9 @@ $packagePatterns = @(
     "Microsoft-Windows-InternetExplorer-Optional-Package~",
     "Microsoft-Windows-MediaPlayer-Package~",
     "Microsoft-Windows-WordPad-FoD-Package~",
-    "Microsoft-Windows-StepsRecorder-Package~",
-    "Microsoft-Windows-MSPaint-FoD-Package~",
-    "Microsoft-Windows-SnippingTool-FoD-Package~",
+    # "Microsoft-Windows-StepsRecorder-Package~",
+    # "Microsoft-Windows-MSPaint-FoD-Package~",
+    # "Microsoft-Windows-SnippingTool-FoD-Package~",
     "Microsoft-Windows-TabletPCMath-Package~",
     "Microsoft-Windows-Xps-Xps-Viewer-Opt-Package~",
     "Microsoft-Windows-PowerShell-ISE-FOD-Package~",
@@ -120,16 +120,16 @@ $packagePatterns = @(
     "Microsoft-Windows-LanguageFeatures-TextToSpeech-$languageCode-Package~",
     "*IME-ja-jp*",
     "*IME-ko-kr*",
-    "*IME-zh-tw*",
+    # "*IME-zh-tw*",
 
     # --- Core OS Features (Removal is aggressive and will break functionality) ---
     "Windows-Defender-Client-Package~",
-    "Microsoft-Windows-Search-Engine-Client-Package~",
+    # "Microsoft-Windows-Search-Engine-Client-Package~",
     "Microsoft-Windows-Kernel-LA57-FoD-Package~",
 
     # --- Security & Identity (Breaks these features) ---
-    "Microsoft-Windows-Hello-Face-Package~",
-    "Microsoft-Windows-Hello-BioEnrollment-Package~",
+    # "Microsoft-Windows-Hello-Face-Package~",
+    # "Microsoft-Windows-Hello-BioEnrollment-Package~",
     "Microsoft-Windows-BitLocker-DriveEncryption-FVE-Package~",
     "Microsoft-Windows-TPM-WMI-Provider-Package~",
 
@@ -163,6 +163,7 @@ Write-Host "Removing pre-compiled .NET assemblies (Native Images)..."
 Remove-Item -Path "$scratchDir\Windows\assembly\NativeImages_*" -Recurse -Force -ErrorAction SilentlyContinue
 
 Write-Host "Performing aggressive manual file deletions..."
+
 $winDir = "$scratchDir\Windows"
 Write-Host "Slimming the DriverStore... (removing non-essential driver classes)"
 $driverRepo = Join-Path -Path $winDir -ChildPath "System32\DriverStore\FileRepository"
@@ -172,8 +173,8 @@ $patternsToRemove = @(
     'mfd*',      # Multi-function device drivers
     'wscsmd.inf*', # Smartcard readers
     'tapdrv*',   # Tape drives
-    'rdpbus.inf*', # Remote Desktop virtual bus
-    'tdibth.inf*'  # Bluetooth Personal Area Network
+    'rdpbus.inf*' # Remote Desktop virtual bus
+    # 'tdibth.inf*'  # Bluetooth Personal Area Network
 )
 
 # Get all driver packages and remove the ones matching the patterns
@@ -389,6 +390,36 @@ Write-Host "Prevents installation or DevHome and Outlook:"
 & 'reg' 'delete' 'HKLM\zSOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\OutlookUpdate' '/f' | Out-Null
 & 'reg' 'delete' 'HKLM\zSOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\DevHomeUpdate' '/f' | Out-Null
 Write-Host "Disabling Copilot"
+Write-Host "设置账户密码永不过期"
+& 'reg' 'add' 'HKLM\zSYSTEM\ControlSet001\Services\Netlogon\Parameters' '/v' 'MaximumPasswordAge' '/t' 'REG_DWORD' '/d' '0xFFFFFFFF' '/f' | Out-Null
+
+Write-Host "彻底关闭休眠功能（删除 hiberfil.sys）"
+& 'reg' 'add' 'HKLM\zSYSTEM\ControlSet001\Control\Power' '/v' 'HibernateEnabled' '/t' 'REG_DWORD' '/d' '0' '/f' | Out-Null
+
+Write-Host "禁用快速启动"
+& 'reg' 'add' 'HKLM\zSYSTEM\ControlSet001\Control\Session Manager\Power' '/v' 'HiberbootEnabled' '/t' 'REG_DWORD' '/d' '0' '/f' | Out-Null
+
+Write-Host "电池/插电 全部永不睡眠"
+& 'reg' 'add' 'HKLM\zSYSTEM\ControlSet001\Control\Power\PowerSettings\238C9FA8-0AAD-41ED-83F4-97BE242C8F27\7bc4a01e-31ff-4fce-9b41-5810a64102a9' '/v' 'ACSettingIndex' '/t' 'REG_DWORD' '/d' '0' '/f' | Out-Null
+& 'reg' 'add' 'HKLM\zSYSTEM\ControlSet001\Control\Power\PowerSettings\238C9FA8-0AAD-41ED-83F4-97BE242C8F27\7bc4a01e-31ff-4fce-9b41-5810a64102a9' '/v' 'DCSettingIndex' '/t' 'REG_DWORD' '/d' '0' '/f' | Out-Null
+
+Write-Host "禁用系统更新自动重启"
+& 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' '/v' 'NoAutoRebootWithLoggedOnUsers' '/t' 'REG_DWORD' '/d' '1' '/f' | Out-Null
+& 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' '/v' 'AUPowerManagement' '/t' 'REG_DWORD' '/d' '0' '/f' | Out-Null
+
+Write-Host "禁用连接/恢复时唤醒"
+& 'reg' 'add' 'HKLM\zSYSTEM\ControlSet001\Control\Power\PowerSettings\4C793396-8016-405C-9D27-183F682C85D6\5016C31F-79BE-48FE-87CE-30FBF55FD66D' '/v' 'ACSettingIndex' '/t' 'REG_DWORD' '/d' '0' '/f' | Out-Null
+& 'reg' 'add' 'HKLM\zSYSTEM\ControlSet001\Control\Power\PowerSettings\4C793396-8016-405C-9D27-183F682C85D6\5016C31F-79BE-48FE-87CE-30FBF55FD66D' '/v' 'DCSettingIndex' '/t' 'REG_DWORD' '/d' '0' '/f' | Out-Null
+
+Write-Host "电源计划：彻底锁定永不睡眠"
+powercfg -x -monitor-timeout-ac 0
+powercfg -x -monitor-timeout-dc 0
+powercfg -x -disk-timeout-ac 0
+powercfg -x -disk-timeout-dc 0
+powercfg -x -standby-timeout-ac 0
+powercfg -x -standby-timeout-dc 0
+powercfg -x -hibernate-timeout-ac 0
+powercfg -x -hibernate-timeout-dc 0
 & 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsCopilot' '/v' 'TurnOffWindowsCopilot' '/t' 'REG_DWORD' '/d' '1' '/f' | Out-Null
 & 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Edge' '/v' 'HubsSidebarEnabled' '/t' 'REG_DWORD' '/d' '0' '/f' | Out-Null
 & 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\Explorer' '/v' 'DisableSearchBoxSuggestions' '/t' 'REG_DWORD' '/d' '1' '/f' | Out-Null
@@ -430,8 +461,8 @@ Write-Host "Disabling Windows Update..."
 & 'reg' 'add' 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' '/v' 'UseWUServer' '/t' 'REG_DWORD' '/d' '1' '/f' 
 & 'reg' 'add' 'HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\OOBE' '/v' 'DisableOnline' '/t' 'REG_DWORD' '/d' '1' '/f' 
 & 'reg' 'add' 'HKLM\zSYSTEM\ControlSet001\Services\wuauserv' '/v' 'Start' '/t' 'REG_DWORD' '/d' '4' '/f' 
-& 'reg' 'delete' 'HKLM\zSYSTEM\ControlSet001\Services\WaaSMedicSVC' '/f'
-& 'reg' 'delete' 'HKLM\zSYSTEM\ControlSet001\Services\UsoSvc' '/f'
+# & 'reg' 'delete' 'HKLM\zSYSTEM\ControlSet001\Services\WaaSMedicSVC' '/f'
+# & 'reg' 'delete' 'HKLM\zSYSTEM\ControlSet001\Services\UsoSvc' '/f'
 & 'reg' 'add' 'HKEY_LOCAL_MACHINE\zSOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' '/v' 'NoAutoUpdate' '/t' 'REG_DWORD' '/d' '1' '/f'
 Write-Host "Disabling Windows Defender"
 $servicePaths = @(
@@ -470,11 +501,11 @@ $servicesToRemove = @(
     'MapsBroker', 
     'WalletService', 
     'BthAvctpSvc', 
-    'BluetoothUserService', 
+    'BluetoothUserService'
     # 'WbioSrvc', # RISKY: Can cause logon screen to hang.
-    'wuauserv', 
-    'UsoSvc', 
-    'WaaSMedicSvc' 
+    # 'wuauserv', 
+    # 'UsoSvc', 
+    # 'WaaSMedicSvc' 
 )
 foreach ($service in $servicesToRemove) { Write-Host "Removing service: $service"; & 'reg' 'delete' "HKLM\zSYSTEM\ControlSet001\Services\$service" /f | Out-Null }
 reg unload HKLM\zSYSTEM 
